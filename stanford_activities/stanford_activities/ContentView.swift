@@ -22,24 +22,44 @@ struct ContentView: View {
 }
 
 struct CardView: View {
-    var isFaceUp: Bool = false
+    // @State creates a pointer to the variable allowing it to be modified at the closured 'onTapGesture'
+    // since structs can only be modified inside its main scope
+    @State var isFaceUp: Bool = false    
     
     var body: some View {
-        ZStack(content: {
+        ZStack {
+            let base = RoundedRectangle(cornerRadius: 12) // let means constant
+            
             if isFaceUp {
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundColor(.white)
-                RoundedRectangle(cornerRadius: 12)
-                    .strokeBorder(lineWidth: 2)
+                base.fill(.white)
+                base.strokeBorder(lineWidth: 2)
                 Text("😇").font(.largeTitle)
 
             } else {
-                RoundedRectangle(cornerRadius: 12)
+                base.fill() // fill is implicitly called
             }
             
+        }.onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
+            isFaceUp.toggle()
         })
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
