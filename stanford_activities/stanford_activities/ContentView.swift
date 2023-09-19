@@ -9,14 +9,32 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        HStack {
-            CardView(isFaceUp: true)
-            CardView()
-            CardView()
-            CardView()
-        }
-        .foregroundColor(.orange)
-        .padding()
+        let emojis: [String] = ["🐝", "🐞", "🕷️", "🦆" ] // [String] = Array<String>
+        VStack{
+            HStack {
+                ForEach(emojis.indices, id: \.self) { index in // ForEach(0..<4, id: \.self) { index in
+                    CardView(content: emojis[index])
+                }
+            }
+            .foregroundColor(.orange)
+            
+            HStack {
+                CardView(content: "🐷")
+                CardView(content: "🪿")
+                CardView(content: "🐺")
+                CardView(content: "🦇")
+            }
+            .foregroundColor(.orange)
+            
+            HStack {
+                CardView(content: "🐞")
+                CardView(content: "🦎")
+                CardView(content: "🦑")
+                CardView(content: "🐙")
+            }
+            .foregroundColor(.orange)
+            
+        }.padding()
         
     }
 }
@@ -24,7 +42,9 @@ struct ContentView: View {
 struct CardView: View {
     // @State creates a pointer to the variable allowing it to be modified at the closured 'onTapGesture'
     // since structs can only be modified inside its main scope
-    @State var isFaceUp: Bool = false    
+    @State var isFaceUp: Bool = true
+    
+    let content: String
     
     var body: some View {
         ZStack {
@@ -33,7 +53,7 @@ struct CardView: View {
             if isFaceUp {
                 base.fill(.white)
                 base.strokeBorder(lineWidth: 2)
-                Text("😇").font(.largeTitle)
+                Text(content).font(.largeTitle)
 
             } else {
                 base.fill() // fill is implicitly called
