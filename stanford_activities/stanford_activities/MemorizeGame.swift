@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MemoryGame<CardContent> {
+struct MemoryGame<CardContent> where CardContent: Equatable {
     // only the model can change its value, but value can be consulted by others
     private(set) var cards: [Card]
     
@@ -17,22 +17,47 @@ struct MemoryGame<CardContent> {
         // add the pairs
         for pairIndex in 0..<max(2,numberOfPairsOfCards) {
             let content = cardContentFactory(pairIndex)
-            cards.append(Card(content: content))
-            cards.append(Card(content: content))
+            cards.append(Card(content: content, id: "\(pairIndex+1)a"))
+            cards.append(Card(content: content, id: "\(pairIndex+1)b"))
         }
     }
     
-    func choose(_ card: Card) {
+    var indexOfTheOneAndOnlyFaceUpCard: Int?
+    
+    mutating func choose(_ card: Card) {
+        print(card)
         
+        if let chosenIndex =  cards.firstIndex(where: { $0.id == card.id}) {
+            if !cards[chosenIndex].isFaceUp && !cards[chosenIndex].isMatched {
+                if let potencialMatchIndex = indexOfTheOneAndOnlyFaceUpCard {
+                    if cards[chosenIndex].content == cards[potencialMatchIndex].content {
+                        cards[chosenIndex].isMatched = true
+                        cards[potencialMatchIndex].isMatched = true
+                    }
+                    indexOfTheOneAndOnlyFaceUpCard = nil
+                } else {
+                    for index in cards.indices {
+                        cards[index].isFaceUp = false
+                    }
+                    indexOfTheOneAndOnlyFaceUpCard = chosenIndex
+                }
+                cards[chosenIndex].isFaceUp = true
+            }
+        }
     }
     
     mutating func shuffle() {
         cards.shuffle()
     }
     
-    struct Card {
+    struct Card: Equatable, Identifiable, CustomStringConvertible {
+        
+        
         var isFaceUp = false
         var isMatched = false
         let content: CardContent
+        
+        var id: String
+        var description: String { "|\(id)| : |\(content) \(isFaceUp ? "up" : "down") \(isMatched ? "matched" : "")|"}
     }
 }

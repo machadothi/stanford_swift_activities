@@ -14,7 +14,7 @@ class EmojiMemoryGame: ObservableObject {
     
     // return are not implicitly defined, needs to be typed
     private static func createMemoryGame() -> MemoryGame<String> {
-        return  MemoryGame(numberOfPairsOfCards: 16) { pairIndex in
+        return  MemoryGame(numberOfPairsOfCards: 10) { pairIndex in
             if emojis.indices.contains(pairIndex){
                 return emojis[pairIndex]
             } else {
